@@ -1,0 +1,24 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,30,15)
+  Text = ("Actualizador")
+  Icon = Picture["Actualiza-icono.png"]
+  Resizable = False
+  { picLOGO PictureBox
+    MoveScaled(1,1,8,8)
+    Picture = Picture["actualizar_debian.png"]
+    Stretch = True
+  }
+  { txtAviso Label
+    MoveScaled(1,10,27,4)
+    Text = ("Actualizando repositorio") & "..."
+  }
+  { txtGIRA Label
+    MoveScaled(20,1,8,8)
+    Font = Font["Bold,22"]
+    Foreground = Color.DarkRed
+    Text = ("|")
+    Alignment = Align.Center
+  }
+}

@@ -1,0 +1,146 @@
+' Gambas class file
+
+Public Clave As String
+Public hProceso As Process
+
+Public Function Actualiza()
+  Wait 0.1
+  txtAviso.Text = "Actualizando repositorio..."
+  txtAviso.Refresh
+  'Shell "sudo apt-get update" Wait
+  hProceso = Shell "sudo apt -y update" 
+  Do While hProceso.State = Process.Running
+      Select Case txtGIRA.Text
+        Case "|"
+          txtGIRA.Text = "/"
+        Case "/"
+          txtGIRA.Text = "-"
+        Case "-"
+          txtGIRA.Text = "\\"
+        Case "\\"
+          txtGIRA.Text = "|"
+        Case Else
+          txtGIRA.Text = "|"
+      End Select
+      Wait 0.1
+  Loop  
+  'Contar cuantos actualiza  
+  Dim Contador As String
+  Shell "echo -ne $(apt list --upgradable -q 2>/dev/null|grep -i 'actualizable'|wc -l)" To Contador
+  If Not (Contador = "0")
+      Shell "notify-send -t 6000 'Se van a actualizar " & Contador & " programas\nEspere a que finalice'"  
+  Endif    
+  
+  txtAviso.Text = "Actualizando Debian..."
+  txtAviso.Refresh
+  'Wait 1
+  'Shell "sudo apt-get -y upgrade" Wait
+  hproceso = Shell "sudo apt -y upgrade"
+  Do While hProceso.State = Process.Running
+      Select Case txtGIRA.Text
+        Case "|"
+          txtGIRA.Text = "/"
+        Case "/"
+          txtGIRA.Text = "-"
+        Case "-"
+          txtGIRA.Text = "\\"
+        Case "\\"
+          txtGIRA.Text = "|"
+        Case Else
+          txtGIRA.Text = "|"
+      End Select
+      Wait 0.1
+  Loop
+  txtGIRA.Text = ""
+  txtAviso.Text = "¡SISTEMA ACTUALIZADO!"
+  txtAviso.Refresh
+  'Wait 1
+  ' Depende del programa: ruby-notify
+    Shell "notify-send -t 3000 'Debian GNU/Linux\nSistema Operativo actualizado'" Wait  
+  Quit
+End
+
+Public Function ActualizaSudo()
+  Dim Salida As String
+  Clave = InputBox("Indique clave de root:", "Contraseña")
+  Shell "echo -ne $(echo '" & Clave & "' | su -l root -s '/bin/sh' -c 'clear;whoami'|tail -1)" To Salida
+  If Right(Salida, 4) = "root"
+    Wait 0.1
+    txtAviso.Text = "Actualizando repositorio..."
+    txtAviso.Refresh
+    'Shell "echo " & Clave & " |  su -l root -c 'apt-get update'" Wait
+    hProceso = Shell "echo " & Clave & " |  su -l root -c 'apt -y update'"
+    Do While hProceso.State = Process.Running
+        Select Case txtGIRA.Text
+          Case "|"
+            txtGIRA.Text = "/"
+          Case "/"
+            txtGIRA.Text = "-"
+          Case "-"
+            txtGIRA.Text = "\\"
+          Case "\\"
+            txtGIRA.Text = "|"
+          Case Else
+            txtGIRA.Text = "|"
+        End Select
+        Wait 0.1
+    Loop    
+  'Contar cuantos actualiza  
+  Dim Contador As String
+  Shell "echo -ne $(apt list --upgradable -q 2>/dev/null|grep -i 'actualizable'|wc -l)" To Contador
+  If Not (Contador = "0")
+      Shell "notify-send -t 6000 'Se van a actualizar " & Contador & " programas\nEspere a que finalice'"  
+  Endif    
+    txtAviso.Text = "Actualizando Debian..."
+    txtAviso.Refresh
+    Wait 0.1
+    'Shell "echo " & Clave & " |  su -l root -c 'apt-get -y upgrade'" Wait
+    hProceso = Shell "echo " & Clave & " |  su -l root -c 'apt -y upgrade'"
+    Do While hProceso.State = Process.Running
+      Select Case txtGIRA.Text
+        Case "|"
+          txtGIRA.Text = "/"
+        Case "/"
+          txtGIRA.Text = "-"
+        Case "-"
+          txtGIRA.Text = "\\"
+        Case "\\"
+          txtGIRA.Text = "|"
+        Case Else
+          txtGIRA.Text = "|"
+      End Select
+      Wait 0.1
+    Loop
+    txtGIRA.Text = ""
+    txtAviso.Text = "¡SISTEMA ACTUALIZADO!"
+    txtAviso.Refresh
+    Wait 0.1
+    ' Depende del programa: ruby-notify
+    Shell "notify-send -t 3000 'Debian GNU/Linux\nSistema Operativo actualizado'" Wait    
+  Else
+    Shell "notify-send -t 3000 'La contraseña no es válida\nNo se ha podido actualizar'" Wait    
+  Endif
+  Quit  
+End
+
+Public Sub Form_Open()
+    System.Shell = "/bin/bash"
+    Me.x = 10
+    Me.Y = 10
+    Me.Show
+    Wait 0.1
+    Me.Refresh 
+    Wait 0.1   
+    CompruebaRoot()
+End
+
+Public Function CompruebaRoot()
+  Dim Devuelve As String
+  Shell "echo -ne $(sudo whoami)" To Devuelve
+  If Devuelve = "root"
+    Actualiza()
+  Else
+    ActualizaSudo()
+  Endif
+End
+

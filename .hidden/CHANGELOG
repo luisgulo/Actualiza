@@ -1,0 +1,13 @@
+* Fri May 01 2020 luisgulo <luisgulo@soloconlinux.org.es> 1.0.9
+- Correccion mensaje y tiempo del aviso de ficheros a actualizar
+
+* Fri May 01 2020 luisgulo <luisgulo@soloconlinux.org.es> 1.0.8
+- Se avisa de numero de paquetes a actualizar
+
+* Sat Apr 11 2020 luisgulo <luisgulo@soloconlinux.org.es> 1.0.6
+- Se incluye solucion a subidas de releases en repositorios
+- Se ajusta control delproceso en segundo plano y animación
+
+* Sun Apr 05 2020 luisgulo <luisgulo@soloconlinux.org.es> 1.0.5
+- Lanzamiento inicial
+
